@@ -1,6 +1,7 @@
 import { Plus } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import type { ToastState } from "./components/Toast";
 import { ToastHost } from "./components/Toast";
 import * as repo from "./db/repositories";
@@ -192,18 +193,20 @@ export default function App() {
       </AnimatePresence>
       </div>
 
-      {route.name === "home" && (
-        <button
-          type="button"
-          className="fab"
-          aria-label="Añadir gasto"
-          onClick={() => setRoute({ name: "create" })}
-        >
-          <Plus size={26} strokeWidth={2.5} />
-        </button>
-      )}
-
       <ToastHost toast={toast} onDismiss={() => setToast(null)} />
+
+      {route.name === "home" &&
+        createPortal(
+          <button
+            type="button"
+            className="fab"
+            aria-label="Añadir gasto"
+            onClick={() => setRoute({ name: "create" })}
+          >
+            <Plus size={26} strokeWidth={2.5} />
+          </button>,
+          document.body,
+        )}
     </div>
   );
 }

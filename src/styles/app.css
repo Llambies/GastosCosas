@@ -187,9 +187,9 @@
 }
 
 .fab {
-  position: absolute;
-  right: var(--page-pad);
-  bottom: calc(20px + var(--safe-bottom));
+  position: fixed;
+  right: max(var(--page-pad), env(safe-area-inset-right, 0px));
+  bottom: max(20px, calc(20px + var(--safe-bottom)));
   width: 56px;
   height: 56px;
   border-radius: var(--radius-md);
@@ -198,7 +198,7 @@
   display: grid;
   place-items: center;
   box-shadow: 0 10px 24px rgba(20, 32, 28, 0.18);
-  z-index: 20;
+  z-index: 100;
   transition: transform 160ms var(--ease-out);
 }
 
