@@ -117,10 +117,9 @@
 }
 
 .expense-row {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: 12px;
-  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   width: 100%;
   text-align: left;
   padding: 14px 0;
@@ -134,6 +133,14 @@
 
 .expense-row:active {
   background: var(--accent-soft);
+}
+
+.expense-row-head {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 12px;
+  align-items: center;
+  width: 100%;
 }
 
 .avatar {
@@ -461,65 +468,79 @@
   margin-left: auto;
 }
 
-.pill-track {
-  position: relative;
-  height: 8px;
-  border-radius: 2px;
-  background: #dce4e8;
-  overflow: hidden;
-}
-
-.pill-fill {
-  height: 100%;
-  border-radius: 2px;
-  transform-origin: left center;
-  background: var(--ok);
-}
-
-.pill-marker {
-  position: absolute;
-  top: -3px;
-  width: 2px;
-  height: 14px;
-  border-radius: 1px;
-  background: var(--ink);
-}
-
-.pill-renewing .pill-fill {
-  background: var(--ok);
-}
-
-.pill-ending .pill-fill {
-  background: var(--warn);
-}
-
-.pill-ending .pill-track {
-  background: var(--warn-soft);
-}
-
-.pill-wrap {
+.month-gantt {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  min-width: 120px;
+  width: 100%;
 }
 
-.pill-wrap.compact .pill-label {
-  font-size: 0.72rem;
+.month-gantt.compact {
+  gap: 4px;
 }
 
-.pill-label {
+.gantt-scale {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.7rem;
+  color: var(--ink-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.gantt-track {
+  position: relative;
+  width: 100%;
+  height: 18px;
+  border-radius: 6px;
+  background:
+    repeating-linear-gradient(
+      to right,
+      transparent,
+      transparent calc(100% / 7 - 1px),
+      rgba(20, 32, 28, 0.08) calc(100% / 7 - 1px),
+      rgba(20, 32, 28, 0.08) calc(100% / 7)
+    ),
+    #e3e9ed;
+  overflow: hidden;
+}
+
+.month-gantt.compact .gantt-track {
+  height: 14px;
+}
+
+.gantt-bar {
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  border-radius: 5px;
+  min-width: 4px;
+}
+
+.gantt-bar-next {
+  opacity: 0.35;
+}
+
+.gantt-marker {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  margin-left: -1px;
+  background: rgba(20, 32, 28, 0.55);
+  z-index: 2;
+}
+
+.gantt-label {
   font-size: 0.8rem;
   color: var(--ink-muted);
 }
 
-.pill-continuation {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  background: rgba(20, 32, 28, 0.06);
-  border-left: 1px solid rgba(20, 32, 28, 0.35);
+.month-gantt.compact .gantt-label {
+  font-size: 0.72rem;
+}
+
+.gantt-ending .gantt-track {
+  background-color: var(--warn-soft);
 }
 
 .confirm-backdrop {

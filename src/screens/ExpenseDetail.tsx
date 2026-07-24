@@ -68,7 +68,11 @@ export function ExpenseDetail({
 
       {cycle && (
         <div style={{ marginBottom: 20 }}>
-          <RenewalCyclePill cycle={cycle} />
+          <RenewalCyclePill
+            cycle={cycle}
+            today={today}
+            color={expense.color}
+          />
         </div>
       )}
 

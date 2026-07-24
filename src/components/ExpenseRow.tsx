@@ -22,26 +22,35 @@ export function ExpenseRow({ expense, today, index, onOpen }: Props) {
       onClick={() => onOpen(expense.id)}
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1], delay: Math.min(index, 6) * 0.03 }}
+      transition={{
+        duration: 0.18,
+        ease: [0.22, 1, 0.36, 1],
+        delay: Math.min(index, 6) * 0.03,
+      }}
     >
-      <div
-        className="avatar"
-        style={{ background: `${expense.color}22`, color: expense.color }}
-      >
-        <Icon size={22} aria-hidden />
-      </div>
-      <div className="row-main">
-        <div className="row-title">{expense.name}</div>
-        <div className="row-meta">
-          <LabelChips labels={expense.labels} max={2} />
+      <div className="expense-row-head">
+        <div
+          className="avatar"
+          style={{ background: `${expense.color}22`, color: expense.color }}
+        >
+          <Icon size={22} aria-hidden />
         </div>
-        {cycle && (
-          <div style={{ marginTop: 8 }}>
-            <RenewalCyclePill cycle={cycle} compact />
+        <div className="row-main">
+          <div className="row-title">{expense.name}</div>
+          <div className="row-meta">
+            <LabelChips labels={expense.labels} max={2} />
           </div>
-        )}
+        </div>
+        <div className="row-amount">{formatEur(expense.amountMinor)}</div>
       </div>
-      <div className="row-amount">{formatEur(expense.amountMinor)}</div>
+      {cycle && (
+        <RenewalCyclePill
+          cycle={cycle}
+          today={today}
+          color={expense.color}
+          compact
+        />
+      )}
     </motion.button>
   );
 }

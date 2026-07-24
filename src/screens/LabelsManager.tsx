@@ -83,8 +83,12 @@ export function LabelsManager({
             {labels.map((l) => (
               <div
                 key={l.id}
-                className="expense-row"
-                style={{ gridTemplateColumns: "1fr auto auto" }}
+                className="expense-row-head"
+                style={{
+                  gridTemplateColumns: "1fr auto",
+                  padding: "10px 0",
+                  borderBottom: "1px solid var(--line)",
+                }}
               >
                 <button type="button" onClick={() => startEdit(l)} style={{ textAlign: "left" }}>
                   <LabelChip label={l} />
