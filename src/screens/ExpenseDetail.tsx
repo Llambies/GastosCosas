@@ -76,13 +76,13 @@ export function ExpenseDetail({
         <h2>Resumen</h2>
         <p>Aporte a los totales del mes y fechas clave.</p>
         <div className="stack">
-          <div className="hero-panel">
+          <div className="metric">
             <div className="label">Gastado (este gasto)</div>
             <div className="amount" style={{ fontSize: "1.25rem" }}>
               {formatEur(expenseSpentShare(expense, today))}
             </div>
           </div>
-          <div className="hero-panel forecast">
+          <div className="metric forecast">
             <div className="label">Previsto (este gasto)</div>
             <div className="amount" style={{ fontSize: "1.25rem" }}>
               {formatEur(expenseForecastShare(expense, today))}

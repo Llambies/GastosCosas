@@ -119,7 +119,7 @@ export function ExpenseForm({
         <button type="button" className="icon-btn" aria-label="Volver" onClick={onBack}>
           <ArrowLeft size={20} />
         </button>
-        <h2 style={{ margin: 0, fontFamily: "var(--font-display)" }}>
+        <h2 className="page-title">
           {initial ? "Editar gasto" : "Nuevo gasto"}
         </h2>
       </div>

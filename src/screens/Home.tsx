@@ -44,8 +44,8 @@ export function Home({
         </button>
       </div>
 
-      <p className="muted" style={{ marginTop: 4, maxWidth: "28ch" }}>
-        Tu ledger vivo: lo consumido y lo que aún queda por el mes.
+      <p className="muted" style={{ marginTop: 2, maxWidth: "32ch" }}>
+        Gastado este mes y lo que queda previsto.
       </p>
 
       <AmountHero spentMinor={spent} forecastMinor={forecast} />

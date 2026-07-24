@@ -40,9 +40,9 @@ export function LabelChips({
         <span
           className="chip"
           style={{
-            color: "var(--text-muted)",
-            background: "var(--surface-soft)",
-            borderColor: "var(--surface-line)",
+            color: "var(--ink-muted)",
+            background: "var(--surface)",
+            borderColor: "var(--line)",
           }}
         >
           +{rest}

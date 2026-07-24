@@ -29,8 +29,8 @@ export function IconPicker({ value, color, onChange }: Props) {
         style={{
           width: 64,
           height: 64,
-          borderRadius: 20,
-          background: `${color}33`,
+          borderRadius: 10,
+          background: `${color}22`,
           color,
           marginBottom: 12,
         }}
@@ -49,9 +49,9 @@ export function IconPicker({ value, color, onChange }: Props) {
           minHeight: 44,
           marginBottom: 10,
           padding: "10px 12px",
-          borderRadius: 10,
-          border: "1px solid var(--surface-line)",
-          background: "rgba(0,0,0,0.22)",
+          borderRadius: 6,
+          border: "1px solid var(--line)",
+          background: "#fff",
         }}
       />
       <div className="picker-grid" role="listbox" aria-label="Iconos">

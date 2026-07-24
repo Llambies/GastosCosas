@@ -20,13 +20,13 @@ export function ExpenseRow({ expense, today, index, onOpen }: Props) {
       type="button"
       className="expense-row"
       onClick={() => onOpen(expense.id)}
-      initial={{ opacity: 0, y: 12 }}
+      initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ type: "spring", stiffness: 280, damping: 24, delay: index * 0.04 }}
+      transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1], delay: Math.min(index, 6) * 0.03 }}
     >
       <div
         className="avatar"
-        style={{ background: `${expense.color}33`, color: expense.color }}
+        style={{ background: `${expense.color}22`, color: expense.color }}
       >
         <Icon size={22} aria-hidden />
       </div>

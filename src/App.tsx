@@ -43,10 +43,10 @@ export default function App() {
       <AnimatePresence mode="wait">
         <motion.div
           key={route.name + ("id" in route ? route.id : "") + ("from" in route ? route.from : "")}
-          initial={{ opacity: 0, x: 18 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -12 }}
-          transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -4 }}
+          transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
         >
           {route.name === "home" && (
             <Home

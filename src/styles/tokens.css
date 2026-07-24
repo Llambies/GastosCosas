@@ -1,30 +1,25 @@
 :root {
-  --bg-0: #0b1418;
-  --bg-1: #122027;
-  --bg-2: #1a2d36;
-  --bg-elevated: #1e3540;
-  --surface-soft: rgba(148, 189, 204, 0.08);
-  --surface-line: rgba(148, 189, 204, 0.16);
-  --text: #e8f1f4;
-  --text-muted: #9bb0b8;
-  --text-soft: #6f8791;
-  --accent: #f5b700;
-  --accent-hot: #ffc933;
-  --accent-dim: rgba(245, 183, 0, 0.16);
-  --warn: #f0a060;
-  --warn-dim: rgba(240, 160, 96, 0.18);
-  --danger: #f07178;
-  --success: #3ecf8e;
-  --shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
-  --radius-sm: 10px;
-  --radius-md: 16px;
-  --radius-lg: 24px;
-  --font-display: "Fraunces", Georgia, serif;
-  --font-body: "DM Sans", "Segoe UI", sans-serif;
+  --bg: #e7ecf0;
+  --surface: #f7f9fa;
+  --ink: #14201c;
+  --ink-muted: #3f534c;
+  --line: #c5d0d6;
+  --accent: #b83218;
+  --accent-soft: #f4e4df;
+  --ok: #1f6b4a;
+  --ok-soft: #d9ebe3;
+  --warn: #9a5b14;
+  --warn-soft: #f3e6d4;
+  --danger: #a11c2e;
+  --danger-soft: #f3dbe0;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --font: "IBM Plex Sans", "Segoe UI", sans-serif;
   --touch: 44px;
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --page-pad: 20px;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -51,12 +46,12 @@ body,
 
 body {
   margin: 0;
-  font-family: var(--font-body);
-  color: var(--text);
+  font-family: var(--font);
+  font-size: 1rem;
+  line-height: 1.45;
+  color: var(--ink);
   background:
-    radial-gradient(1200px 600px at 10% -10%, rgba(56, 189, 248, 0.12), transparent 55%),
-    radial-gradient(900px 500px at 100% 0%, rgba(245, 183, 0, 0.1), transparent 50%),
-    linear-gradient(180deg, var(--bg-0), var(--bg-1) 40%, var(--bg-0));
+    linear-gradient(180deg, #dfe6ec 0%, var(--bg) 28%, #eef2f5 100%);
   overflow: hidden;
   -webkit-font-smoothing: antialiased;
 }

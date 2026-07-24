@@ -26,7 +26,7 @@ export function RenewalCyclePill({ cycle, compact = false }: Props) {
           transition={
             reduce
               ? { duration: 0 }
-              : { type: "spring", stiffness: 120, damping: 18 }
+              : { duration: 0.35, ease: [0.22, 1, 0.36, 1] }
           }
         />
         {cycle.mode === "renewing" && (
@@ -36,19 +36,10 @@ export function RenewalCyclePill({ cycle, compact = false }: Props) {
             aria-hidden
           />
         )}
-        <motion.div
+        <div
           className="pill-marker"
           style={{ left: `calc(${markerPct}% - 1px)` }}
-          animate={
-            reduce
-              ? undefined
-              : { scaleY: [1, 1.25, 1], opacity: [0.85, 1, 0.85] }
-          }
-          transition={
-            reduce
-              ? undefined
-              : { repeat: Infinity, duration: 2.2, ease: "easeInOut" }
-          }
+          aria-hidden
         />
       </div>
       <div className="pill-label">{cycle.label}</div>

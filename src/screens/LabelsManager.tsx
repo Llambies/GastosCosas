@@ -74,7 +74,7 @@ export function LabelsManager({
         <button type="button" className="icon-btn" aria-label="Volver" onClick={onBack}>
           <ArrowLeft size={20} />
         </button>
-        <h2 style={{ margin: 0, fontFamily: "var(--font-display)" }}>Etiquetas</h2>
+        <h2 className="page-title">Etiquetas</h2>
       </div>
 
       {!formOpen && (
