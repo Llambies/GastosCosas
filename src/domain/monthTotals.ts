@@ -1,5 +1,4 @@
 import {
-  addDays,
   daysInMonth,
   maxIso,
   minIso,
@@ -10,6 +9,7 @@ import {
   type IsoDate,
 } from "./dates";
 import { effectiveEndOn } from "./effectiveEnd";
+import { nextRenewalOn } from "./recurrence";
 import type { Expense } from "./types";
 
 function monthBaseMinor(expense: Expense, month: IsoDate): number {
@@ -30,10 +30,7 @@ function monthBaseMinor(expense: Expense, month: IsoDate): number {
   }
 }
 
-function coverageEnd(
-  expense: Expense,
-  hardCap: IsoDate,
-): IsoDate {
+function coverageEnd(expense: Expense, hardCap: IsoDate): IsoDate {
   const end = effectiveEndOn(expense);
   if (end) return minIso(end, hardCap);
   return hardCap;
@@ -59,22 +56,37 @@ function contributionMinor(
   return Math.round((base * days) / dim);
 }
 
-/** Gastado este mes: consumo estimado hasta mañana (hoy inclusive). */
+/**
+ * Fin del tramo "ya activo" dentro del mes: hasta la próxima renovación
+ * (si aún no ha ocurrido) o hasta fin de mes / fin efectivo.
+ * No se corta en "hoy".
+ */
+function spentIntervalEnd(expense: Expense, today: IsoDate): IsoDate {
+  const me = nextMonthStart(today);
+  const hardCap = coverageEnd(expense, me);
+  const next = nextRenewalOn(expense, today);
+  if (next && next < me) {
+    return minIso(next, hardCap);
+  }
+  return hardCap;
+}
+
+/**
+ * Gastado este mes: ciclo ya activo completo (hasta renovación/fin),
+ * no prorrateo hasta hoy. No incluye renovaciones futuras del mes.
+ */
 export function spentThisMonth(expenses: Expense[], today: IsoDate): number {
   const ms = monthStart(today);
-  const me = nextMonthStart(today);
-  const tomorrow = addDays(today, 1);
-  const intervalEnd = minIso(tomorrow, me);
 
   return expenses.reduce((sum, expense) => {
-    if (expense.status === "ended" && effectiveEndOn(expense)) {
-      // sigue aportando si hubo solape en el mes
-    }
+    // Aún no ha empezado → no cuenta como activa
+    if (expense.startsOn > today) return sum;
+    const intervalEnd = spentIntervalEnd(expense, today);
     return sum + contributionMinor(expense, ms, intervalEnd, today);
   }, 0);
 }
 
-/** Previsto: proyección prorrateada hasta fin de mes o fin efectivo. */
+/** Previsto: proyección prorrateada hasta fin de mes o fin efectivo (incluye renovación). */
 export function forecastThisMonth(expenses: Expense[], today: IsoDate): number {
   const ms = monthStart(today);
   const me = nextMonthStart(today);

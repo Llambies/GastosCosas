@@ -44,8 +44,8 @@ export function Home({
         </button>
       </div>
 
-      <p className="muted" style={{ marginTop: 2, maxWidth: "32ch" }}>
-        Gastado este mes y lo que queda previsto.
+      <p className="muted" style={{ marginTop: 2, maxWidth: "36ch" }}>
+        Gastado: ciclo activo. Previsto: incluye la próxima renovación del mes.
       </p>
 
       <AmountHero spentMinor={spent} forecastMinor={forecast} />

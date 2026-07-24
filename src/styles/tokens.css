@@ -40,19 +40,33 @@
 html,
 body,
 #root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+html {
+  /* Rellena el layout viewport de Android (se comprime con adjustResize). */
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+}
+
+body,
+#root {
   height: 100%;
   min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 body {
-  margin: 0;
   font-family: var(--font);
   font-size: 1rem;
   line-height: 1.45;
   color: var(--ink);
-  background:
-    linear-gradient(180deg, #dfe6ec 0%, var(--bg) 28%, #eef2f5 100%);
-  overflow: hidden;
+  background: var(--surface);
   -webkit-font-smoothing: antialiased;
 }
 
