@@ -1,3 +1,4 @@
+import { Plus } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import type { ToastState } from "./components/Toast";
@@ -40,6 +41,7 @@ export default function App() {
 
   return (
     <div className="app-shell">
+      <div className="app-scroll">
       <AnimatePresence mode="wait">
         <motion.div
           key={route.name + ("id" in route ? route.id : "") + ("from" in route ? route.from : "")}
@@ -58,7 +60,6 @@ export default function App() {
               loading={data.loading}
               error={data.error}
               onOpen={(id) => setRoute({ name: "detail", id })}
-              onCreate={() => setRoute({ name: "create" })}
               onSettings={() => setRoute({ name: "settings" })}
             />
           )}
@@ -189,6 +190,18 @@ export default function App() {
           )}
         </motion.div>
       </AnimatePresence>
+      </div>
+
+      {route.name === "home" && (
+        <button
+          type="button"
+          className="fab"
+          aria-label="Añadir gasto"
+          onClick={() => setRoute({ name: "create" })}
+        >
+          <Plus size={26} strokeWidth={2.5} />
+        </button>
+      )}
 
       <ToastHost toast={toast} onDismiss={() => setToast(null)} />
     </div>

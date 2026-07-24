@@ -1,4 +1,4 @@
-import { Plus, Settings } from "lucide-react";
+import { Settings } from "lucide-react";
 import { AmountHero } from "../components/AmountHero";
 import { ExpenseRow } from "../components/ExpenseRow";
 import type { Expense } from "../domain";
@@ -12,7 +12,6 @@ interface Props {
   loading: boolean;
   error: string | null;
   onOpen: (id: string) => void;
-  onCreate: () => void;
   onSettings: () => void;
 }
 
@@ -25,7 +24,6 @@ export function Home({
   loading,
   error,
   onOpen,
-  onCreate,
   onSettings,
 }: Props) {
   return (
@@ -45,7 +43,7 @@ export function Home({
       </div>
 
       <p className="muted" style={{ marginTop: 2, maxWidth: "36ch" }}>
-        Gastado: ciclo activo. Previsto: incluye la próxima renovación del mes.
+        Gastado: ciclo activo. Previsto: coste mensual si se renueva.
       </p>
 
       <AmountHero spentMinor={spent} forecastMinor={forecast} />
@@ -103,15 +101,6 @@ export function Home({
           </section>
         </>
       )}
-
-      <button
-        type="button"
-        className="fab"
-        aria-label="Añadir gasto"
-        onClick={onCreate}
-      >
-        <Plus size={26} strokeWidth={2.5} />
-      </button>
     </div>
   );
 }

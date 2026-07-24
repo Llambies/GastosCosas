@@ -79,20 +79,41 @@ export function spentThisMonth(expenses: Expense[], today: IsoDate): number {
   const ms = monthStart(today);
 
   return expenses.reduce((sum, expense) => {
-    // Aún no ha empezado → no cuenta como activa
     if (expense.startsOn > today) return sum;
     const intervalEnd = spentIntervalEnd(expense, today);
     return sum + contributionMinor(expense, ms, intervalEnd, today);
   }, 0);
 }
 
-/** Previsto: proyección prorrateada hasta fin de mes o fin efectivo (incluye renovación). */
+/**
+ * Previsto: coste mensual completo de suscripciones que siguen activas
+ * (se espera que renueven). Si cortan este mes, se prorratea hasta el fin.
+ */
 export function forecastThisMonth(expenses: Expense[], today: IsoDate): number {
   const ms = monthStart(today);
   const me = nextMonthStart(today);
 
   return expenses.reduce((sum, expense) => {
-    return sum + contributionMinor(expense, ms, me, today);
+    const base = monthBaseMinor(expense, today);
+    if (base === 0) return sum;
+
+    // Pago único: solo el solape real en el mes
+    if (expense.recurrence === "none") {
+      return sum + contributionMinor(expense, ms, me, today);
+    }
+
+    if (expense.startsOn >= me) return sum;
+
+    const end = effectiveEndOn(expense);
+    if (end && end <= ms) return sum;
+
+    // Cancelada / fin dentro del mes → prorrateo hasta esa fecha
+    if (end && end < me) {
+      return sum + contributionMinor(expense, ms, me, today);
+    }
+
+    // Activa y se espera renovación → importe mensual completo
+    return sum + base;
   }, 0);
 }
 

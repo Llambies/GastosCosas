@@ -32,28 +32,39 @@ function expense(partial: Partial<Expense> & Pick<Expense, "id" | "startsOn">): 
 }
 
 describe("monthTotals", () => {
-  it("alta el día 15: gastado = ciclo activo hasta fin de mes; previsto igual si no hay renovación posterior", () => {
+  it("alta a mitad de mes: previsto = importe completo si se renueva", () => {
     const today = "2024-04-20";
     const e = expense({ id: "1", startsOn: "2024-04-15", amountMinor: 3000 });
-    // Renovación siguiente: 2024-05-15 → gastado cubre [15, 05-01) = 16 días
+    // Gastado: ciclo activo hasta fin de mes [15, 05-01) = 16 días
     expect(spentThisMonth([e], today)).toBe(Math.round((3000 * 16) / 30));
-    expect(forecastThisMonth([e], today)).toBe(Math.round((3000 * 16) / 30));
+    // Previsto: coste mensual completo (no cancelada)
+    expect(forecastThisMonth([e], today)).toBe(3000);
   });
 
-  it("antes de renovar el 15: gastado hasta el 15; previsto todo el mes", () => {
+  it("antes de renovar el 15: gastado hasta el 15; previsto mes completo", () => {
     const today = "2024-03-12";
     const e = expense({
       id: "r",
       startsOn: "2024-02-15",
       amountMinor: 3100,
     });
-    // Gastado: ciclo activo [03-01, 03-15) = 14 días
     expect(spentThisMonth([e], today)).toBe(Math.round((3100 * 14) / 31));
-    // Previsto: [03-01, 04-01) = mes completo
     expect(forecastThisMonth([e], today)).toBe(3100);
   });
 
-  it("después de renovar el 15: gastado ya incluye el ciclo renovado hasta fin de mes", () => {
+  it("caso screenshot: empieza el 24 → gastado prorrateado, previsto 12€", () => {
+    const today = "2026-07-24";
+    const e = expense({
+      id: "cosa",
+      startsOn: "2026-07-24",
+      amountMinor: 1200,
+    });
+    // [07-24, 08-01) = 8 días en julio (31)
+    expect(spentThisMonth([e], today)).toBe(Math.round((1200 * 8) / 31));
+    expect(forecastThisMonth([e], today)).toBe(1200);
+  });
+
+  it("después de renovar el 15: gastado y previsto cubren el mes", () => {
     const today = "2024-03-20";
     const e = expense({
       id: "r2",
@@ -64,12 +75,11 @@ describe("monthTotals", () => {
     expect(forecastThisMonth([e], today)).toBe(3100);
   });
 
-  it("suscripción futura en el mes: gastado 0, previsto con solape", () => {
+  it("suscripción futura en el mes: gastado 0, previsto importe completo", () => {
     const today = "2024-04-10";
     const e = expense({ id: "f", startsOn: "2024-04-20", amountMinor: 3000 });
     expect(spentThisMonth([e], today)).toBe(0);
-    // [04-20, 05-01) = 11 días en abril (30)
-    expect(forecastThisMonth([e], today)).toBe(Math.round((3000 * 11) / 30));
+    expect(forecastThisMonth([e], today)).toBe(3000);
   });
 
   it("soporta meses de 28/29/30/31 días", () => {
@@ -87,7 +97,6 @@ describe("monthTotals", () => {
         startsOn: toIso(y, m, 1),
         amountMinor: dim * 100,
       });
-      // Empieza el 1 → próxima renovación el 1 del mes siguiente → gastado = mes entero
       expect(forecastThisMonth([e], today)).toBe(dim * 100);
       expect(spentThisMonth([e], today)).toBe(dim * 100);
     }
@@ -118,7 +127,6 @@ describe("monthTotals", () => {
     const cancelled = { ...e, ...patch };
     const afterForecast = forecastThisMonth([cancelled], today);
     expect(afterForecast).toBeLessThan(beforeForecast);
-    // Ambos cortan en el 15: [01,15) = 14 días
     expect(afterForecast).toBe(Math.round((3100 * 14) / 31));
     expect(spentThisMonth([cancelled], today)).toBe(afterForecast);
   });

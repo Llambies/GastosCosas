@@ -5,13 +5,21 @@
   margin: 0 auto;
   min-height: 0;
   height: 100%;
-  padding: calc(16px + var(--safe-top)) var(--page-pad) calc(96px + var(--safe-bottom));
   position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.app-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
   overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior-y: contain;
   -webkit-overflow-scrolling: touch;
-  background: var(--surface);
+  padding: calc(16px + var(--safe-top)) var(--page-pad) calc(96px + var(--safe-bottom));
 }
 
 .brand {
@@ -179,8 +187,8 @@
 }
 
 .fab {
-  position: fixed;
-  right: max(var(--page-pad), calc(50% - 240px + var(--page-pad)));
+  position: absolute;
+  right: var(--page-pad);
   bottom: calc(20px + var(--safe-bottom));
   width: 56px;
   height: 56px;
@@ -339,12 +347,17 @@
 }
 
 .toast-host {
-  position: fixed;
+  position: absolute;
   left: 50%;
   bottom: calc(88px + var(--safe-bottom));
   transform: translateX(-50%);
   z-index: 40;
   width: min(420px, calc(100% - 32px));
+  pointer-events: none;
+}
+
+.toast-host .toast {
+  pointer-events: auto;
 }
 
 .toast {
