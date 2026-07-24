@@ -1,9 +1,13 @@
 .app-shell {
-  min-height: 100dvh;
+  height: 100%;
   max-width: 480px;
   margin: 0 auto;
-  padding: 16px var(--page-pad) calc(96px + var(--safe-bottom));
+  padding: calc(16px + var(--safe-top)) var(--page-pad) calc(96px + var(--safe-bottom));
   position: relative;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 .brand {
