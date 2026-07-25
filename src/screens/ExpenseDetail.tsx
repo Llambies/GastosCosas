@@ -72,6 +72,7 @@ export function ExpenseDetail({
             cycle={cycle}
             today={today}
             color={expense.color}
+            title={expense.name}
           />
         </div>
       )}
