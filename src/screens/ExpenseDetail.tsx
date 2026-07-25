@@ -1,5 +1,5 @@
 import { ArrowLeft, Pencil, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LabelChips } from "../components/LabelChip";
 import { RenewalCyclePill } from "../components/RenewalCyclePill";
 import {
@@ -21,6 +21,8 @@ interface Props {
   onDelete: () => Promise<void>;
   onCancel: () => Promise<void>;
   onUndoCancel: () => Promise<void>;
+  onDialogOpen?: () => void;
+  onDialogClose?: () => void;
 }
 
 export function ExpenseDetail({
@@ -31,6 +33,8 @@ export function ExpenseDetail({
   onDelete,
   onCancel,
   onUndoCancel,
+  onDialogOpen,
+  onDialogClose,
 }: Props) {
   const Icon = getIcon(expense.icon);
   const cycle = cycleProgress(expense, today);
@@ -39,13 +43,40 @@ export function ExpenseDetail({
   const [confirmCancel, setConfirmCancel] = useState(false);
   const [busy, setBusy] = useState(false);
 
+  useEffect(() => {
+    const close = () => setConfirmCancel(false);
+    window.addEventListener("gastocosas:close-dialog", close);
+    return () => window.removeEventListener("gastocosas:close-dialog", close);
+  }, []);
+
+  function openConfirm() {
+    setConfirmCancel(true);
+    onDialogOpen?.();
+  }
+
+  function closeConfirm() {
+    if (!confirmCancel) return;
+    setConfirmCancel(false);
+    onDialogClose?.();
+  }
+
   return (
     <div className="page-enter">
       <div className="topbar">
-        <button type="button" className="icon-btn" aria-label="Volver" onClick={onBack}>
+        <button
+          type="button"
+          className="icon-btn"
+          aria-label="Volver"
+          onClick={onBack}
+        >
           <ArrowLeft size={20} />
         </button>
-        <button type="button" className="icon-btn settings-link" aria-label="Editar" onClick={onEdit}>
+        <button
+          type="button"
+          className="icon-btn settings-link"
+          aria-label="Editar"
+          onClick={onEdit}
+        >
           <Pencil size={18} />
         </button>
       </div>
@@ -107,7 +138,7 @@ export function ExpenseDetail({
             type="button"
             className="btn btn-danger"
             disabled={busy}
-            onClick={() => setConfirmCancel(true)}
+            onClick={openConfirm}
           >
             Cancelar al final del ciclo
           </button>
@@ -158,7 +189,7 @@ export function ExpenseDetail({
               <button
                 type="button"
                 className="btn btn-secondary"
-                onClick={() => setConfirmCancel(false)}
+                onClick={closeConfirm}
               >
                 No
               </button>
@@ -169,7 +200,7 @@ export function ExpenseDetail({
                   setBusy(true);
                   try {
                     await onCancel();
-                    setConfirmCancel(false);
+                    closeConfirm();
                   } finally {
                     setBusy(false);
                   }

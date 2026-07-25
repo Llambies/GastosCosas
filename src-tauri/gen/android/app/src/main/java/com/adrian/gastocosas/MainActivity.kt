@@ -6,6 +6,10 @@ import android.webkit.WebView
 import androidx.core.view.WindowCompat
 
 class MainActivity : TauriActivity() {
+  // Deja que el WebView consuma el gesto/botón atrás (history.back),
+  // para la pila de pantallas estilo Flutter en el frontend.
+  override val handleBackNavigation: Boolean = true
+
   override fun onCreate(savedInstanceState: Bundle?) {
     // Evita edge-to-edge por defecto (API 35+): la WebView llena el hueco
     // entre status bar y nav bar, sin solapar iconos del sistema.
