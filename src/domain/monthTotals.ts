@@ -86,35 +86,18 @@ export function spentThisMonth(expenses: Expense[], today: IsoDate): number {
 }
 
 /**
- * Previsto: coste mensual completo de suscripciones que siguen activas
- * (se espera que renueven). Si cortan este mes, se prorratea hasta el fin.
+ * Previsto: cobertura prorrateada del mes (desde alta / 1 hasta fin de mes
+ * o fin efectivo). Difiere de gastado solo si aún falta una renovación que
+ * complete el mes: gastado corta en esa fecha; previsto sigue hasta el fin.
  */
 export function forecastThisMonth(expenses: Expense[], today: IsoDate): number {
   const ms = monthStart(today);
   const me = nextMonthStart(today);
 
-  return expenses.reduce((sum, expense) => {
-    const base = monthBaseMinor(expense, today);
-    if (base === 0) return sum;
-
-    // Pago único: solo el solape real en el mes
-    if (expense.recurrence === "none") {
-      return sum + contributionMinor(expense, ms, me, today);
-    }
-
-    if (expense.startsOn >= me) return sum;
-
-    const end = effectiveEndOn(expense);
-    if (end && end <= ms) return sum;
-
-    // Cancelada / fin dentro del mes → prorrateo hasta esa fecha
-    if (end && end < me) {
-      return sum + contributionMinor(expense, ms, me, today);
-    }
-
-    // Activa y se espera renovación → importe mensual completo
-    return sum + base;
-  }, 0);
+  return expenses.reduce(
+    (sum, expense) => sum + contributionMinor(expense, ms, me, today),
+    0,
+  );
 }
 
 export function expenseSpentShare(

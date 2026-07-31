@@ -29,12 +29,28 @@ export function pctInMonth(
   };
 }
 
+/** Posición (%) del inicio del día de hoy en la pista del mes. */
+export function todayMarkerLeft(today: IsoDate): number {
+  const { y, m, d } = parseIso(today);
+  return ((d - 1) / daysInMonth(y, m)) * 100;
+}
+
+/**
+ * Segmentos de la pista mensual.
+ * - `active`: ciclo actual recortado al mes (lleva nombre/importe).
+ * - `next`: tramo posterior a la renovación dentro del mes (aún no cobrado).
+ * - `prev`: tramo del ciclo anterior que solapa el mes (p.ej. renovó el 23
+ *   y hoy es el 30 → del 1 al 23), solo si el gasto ya estaba activo al
+ *   inicio del mes.
+ */
 export function laneSegments(
   cycle: CycleProgress,
   today: IsoDate,
+  startsOn?: IsoDate,
 ): {
   active: { left: number; width: number };
   next: { left: number; width: number } | null;
+  prev: { left: number; width: number } | null;
   dim: number;
 } {
   const ms = monthStart(today);
@@ -46,5 +62,13 @@ export function laneSegments(
     cycle.mode === "renewing" && cycle.cycleEnd < me
       ? pctInMonth(cycle.cycleEnd, me, today)
       : null;
-  return { active, next, dim };
+  const prev =
+    cycle.mode === "renewing" &&
+    startsOn &&
+    startsOn <= ms &&
+    cycle.cycleStart > ms &&
+    cycle.cycleStart < me
+      ? pctInMonth(ms, cycle.cycleStart, today)
+      : null;
+  return { active, next, prev, dim };
 }

@@ -1,10 +1,11 @@
 import { motion, useReducedMotion } from "motion/react";
 import type { CycleProgress, IsoDate } from "../domain";
-import { laneSegments } from "../lib/monthLane";
+import { laneSegments, todayMarkerLeft } from "../lib/monthLane";
 
 interface Props {
   cycle: CycleProgress;
   today: IsoDate;
+  startsOn?: IsoDate;
   color?: string;
   title?: string;
   compact?: boolean;
@@ -14,12 +15,13 @@ interface Props {
 export function RenewalCyclePill({
   cycle,
   today,
+  startsOn,
   color,
   title,
   compact = false,
 }: Props) {
   const reduce = useReducedMotion();
-  const { active, next, dim } = laneSegments(cycle, today);
+  const { active, next, prev, dim } = laneSegments(cycle, today, startsOn);
   const barColor =
     color ?? (cycle.mode === "ending" ? "var(--warn)" : "var(--ok)");
 
@@ -35,6 +37,17 @@ export function RenewalCyclePill({
         </div>
       )}
       <div className="gantt-track gantt-track-tall">
+        {prev && prev.width > 0 && (
+          <div
+            className="gantt-bar gantt-bar-next"
+            style={{
+              left: `${prev.left}%`,
+              width: `${prev.width}%`,
+              background: barColor,
+            }}
+            aria-hidden
+          />
+        )}
         {active.width > 0 && (
           <motion.div
             className="gantt-bar gantt-bar-filled"
@@ -66,6 +79,13 @@ export function RenewalCyclePill({
             aria-hidden
           />
         )}
+        <div
+          className="lane-today lane-today-inset"
+          style={{ left: `${todayMarkerLeft(today)}%` }}
+          aria-hidden
+        >
+          <span className="lane-today-label">hoy</span>
+        </div>
       </div>
       <div className="gantt-label">{cycle.label}</div>
     </div>

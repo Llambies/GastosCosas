@@ -102,6 +102,7 @@ export function ExpenseDetail({
           <RenewalCyclePill
             cycle={cycle}
             today={today}
+            startsOn={expense.startsOn}
             color={expense.color}
             title={expense.name}
           />

@@ -1,5 +1,12 @@
 import { motion, useReducedMotion } from "motion/react";
-import { cycleProgress, formatEur, nextMonthStart, type Expense } from "../domain";
+import {
+  cycleProgress,
+  daysInMonth,
+  formatEur,
+  nextMonthStart,
+  parseIso,
+  type Expense,
+} from "../domain";
 import { getIcon } from "../lib/iconRegistry";
 import { laneSegments, pctInMonth } from "../lib/monthLane";
 
@@ -14,21 +21,23 @@ export function ExpenseRow({ expense, today, index, onOpen }: Props) {
   const Icon = getIcon(expense.icon);
   const reduce = useReducedMotion();
   const cycle = cycleProgress(expense, today);
+  const { y, m } = parseIso(today);
+  const dim = daysInMonth(y, m);
 
   const segments = cycle
-    ? laneSegments(cycle, today)
+    ? laneSegments(cycle, today, expense.startsOn)
     : {
-        active: pctInMonth(
-          expense.startsOn,
-          nextMonthStart(today),
-          today,
-        ),
+        active: pctInMonth(expense.startsOn, nextMonthStart(today), today),
         next: null,
-        dim: 0,
+        prev: null,
+        dim,
       };
 
   // Si el tramo activo es muy estrecho, ampliar un mínimo visual para el título
-  const activeWidth = Math.max(segments.active.width, segments.active.width > 0 ? 28 : 0);
+  const activeWidth = Math.max(
+    segments.active.width,
+    segments.active.width > 0 ? 28 : 0,
+  );
   const activeLeft = Math.min(segments.active.left, 100 - activeWidth);
 
   const label = cycle?.label ?? null;
@@ -47,7 +56,21 @@ export function ExpenseRow({ expense, today, index, onOpen }: Props) {
         delay: Math.min(index, 6) * 0.03,
       }}
     >
-      <div className="expense-lane-track">
+      <div
+        className="expense-lane-track"
+        style={{ ["--lane-days" as string]: dim }}
+      >
+        {segments.prev && segments.prev.width > 0 && (
+          <div
+            className="expense-lane-bar expense-lane-bar-next"
+            style={{
+              left: `${segments.prev.left}%`,
+              width: `${segments.prev.width}%`,
+              background: expense.color,
+            }}
+            aria-hidden
+          />
+        )}
         {activeWidth > 0 && (
           <motion.div
             className="expense-lane-bar"
@@ -65,11 +88,14 @@ export function ExpenseRow({ expense, today, index, onOpen }: Props) {
                 : { duration: 0.35, ease: [0.22, 1, 0.36, 1] }
             }
           >
-            <Icon size={16} aria-hidden className="expense-lane-icon" />
-            <span className="expense-lane-name">{expense.name}</span>
-            <span className="expense-lane-amount">
-              {formatEur(expense.amountMinor)}
-            </span>
+            <div className="expense-lane-labels">
+              <Icon size={16} aria-hidden className="expense-lane-icon" />
+              <span className="expense-lane-name">{expense.name}</span>
+              <span className="expense-lane-amount">
+                {formatEur(expense.amountMinor)}
+              </span>
+            </div>
+            {label && <div className="expense-lane-meta">{label}</div>}
           </motion.div>
         )}
         {segments.next && segments.next.width > 0 && (
@@ -84,7 +110,6 @@ export function ExpenseRow({ expense, today, index, onOpen }: Props) {
           />
         )}
       </div>
-      {label && <div className="expense-lane-meta">{label}</div>}
     </motion.button>
   );
 }

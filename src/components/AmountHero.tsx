@@ -34,7 +34,7 @@ export function AmountHero({ spentMinor, forecastMinor }: Props) {
         <div className="label">Gastado este mes</div>
         <CountUp value={spentMinor} />
       </div>
-      <div className="hero-panel forecast">
+      <div className="hero-panel">
         <div className="label">Previsto</div>
         <CountUp value={forecastMinor} />
       </div>

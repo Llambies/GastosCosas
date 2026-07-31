@@ -2,6 +2,7 @@ import { Settings } from "lucide-react";
 import { AmountHero } from "../components/AmountHero";
 import { ExpenseRow } from "../components/ExpenseRow";
 import type { Expense } from "../domain";
+import { todayMarkerLeft } from "../lib/monthLane";
 
 interface Props {
   spent: number;
@@ -42,14 +43,13 @@ export function Home({
         </button>
       </div>
 
-      <p className="muted" style={{ marginTop: 2, maxWidth: "36ch" }}>
-        Gastado: ciclo activo. Previsto: coste mensual si se renueva.
-      </p>
-
       <AmountHero spentMinor={spent} forecastMinor={forecast} />
 
       {error && (
-        <div className="empty" style={{ marginTop: 18, color: "var(--danger)" }}>
+        <div
+          className="empty"
+          style={{ marginTop: 18, color: "var(--danger)" }}
+        >
           {error}
         </div>
       )}
@@ -62,11 +62,17 @@ export function Home({
         <>
           <section className="section">
             <h2>Suscripciones activas</h2>
-            <p>Mensuales y anuales con su ciclo a la vista.</p>
             {subscriptions.length === 0 ? (
               <div className="empty">Aún no hay suscripciones.</div>
             ) : (
-              <div className="list">
+              <div className="list list-lanes">
+                <div
+                  className="lane-today"
+                  style={{ left: `${todayMarkerLeft(today)}%` }}
+                  aria-hidden
+                >
+                  <span className="lane-today-label">hoy</span>
+                </div>
                 {subscriptions.map((e, i) => (
                   <ExpenseRow
                     key={e.id}
@@ -82,11 +88,17 @@ export function Home({
 
           <section className="section">
             <h2>Pagos fijos</h2>
-            <p>Alquiler, hipoteca y otros cargos no cancelables.</p>
             {fixed.length === 0 ? (
               <div className="empty">Sin pagos fijos todavía.</div>
             ) : (
-              <div className="list">
+              <div className="list list-lanes">
+                <div
+                  className="lane-today"
+                  style={{ left: `${todayMarkerLeft(today)}%` }}
+                  aria-hidden
+                >
+                  <span className="lane-today-label">hoy</span>
+                </div>
                 {fixed.map((e, i) => (
                   <ExpenseRow
                     key={e.id}
